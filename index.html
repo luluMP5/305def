@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Définitions d'Histoire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fond: #EFEFEF;
+    --carte: #FFFFFF;
+    --bordure: #D0D0D0;
+    --bordure-forte: #111111;
+    --texte: #111111;
+    --texte-doux: #6B6B6B;
+    --ok: #2F7D4F;
+    --ok-fond: #EAF5EE;
+    --ko: #B3403A;
+    --ko-fond: #FBEDEC;
+  }
+ 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+ 
+  body {
+    min-height: 100vh;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--texte);
+    background: var(--fond);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+ 
+  button, input, textarea { font: inherit; color: inherit; }
+ 
+  .vue {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ 
+  /* ---------- En-tête ---------- */
+  header {
+    text-align: center;
+    margin-top: clamp(56px, 12vh, 120px);
+  }
+ 
+  .surtitre {
+    font-size: .8rem;
+    font-weight: 500;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+  }
+ 
+  h1 {
+    margin-top: 14px;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+  }
+ 
+  .sous-titre {
+    margin-top: 14px;
+    font-size: 1.05rem;
+    color: var(--texte-doux);
+  }
+ 
+  main {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(40px, 8vh, 80px) 0;
+  }
+ 
+  /* ---------- Cartes niveaux ---------- */
+  .niveaux {
+    width: 100%;
+    max-width: 980px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+ 
+  .carte {
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 28px 24px 24px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  }
+ 
+  .carte:hover,
+  .carte:focus-visible {
+    border-color: var(--bordure-forte);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    transform: translateY(-3px);
+    outline: none;
+  }
+ 
+  .numero {
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--texte-doux);
+  }
+ 
+  .carte h2 {
+    margin-top: 10px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -.015em;
+  }
+ 
+  .consigne {
+    margin-top: 10px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--texte-doux);
+  }
+ 
+  .difficulte {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--bordure);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .85rem;
+    font-weight: 500;
+  }
+  .carte .difficulte { width: 100%; }
+ 
+  .points { display: flex; gap: 5px; }
+  .points i {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--bordure);
+    display: block;
+  }
+  .points i.plein { background: var(--texte); }
+ 
+  /* ---------- Vue chapitres ---------- */
+  .bloc-chapitres {
+    width: 100%;
+    max-width: 720px;
+    margin-top: clamp(40px, 9vh, 90px);
+    padding-bottom: 60px;
+  }
+ 
+  .retour {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--texte-doux);
+    padding: 6px 0;
+    transition: color .2s ease;
+  }
+  .retour:hover { color: var(--texte); }
+ 
+  .entete-chapitres { margin-top: 28px; }
+  .badge {
+    display: inline-block;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--texte);
+    color: #fff;
+  }
+  .entete-chapitres h2 {
+    margin-top: 16px;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -.025em;
+    line-height: 1.15;
+  }
+  .entete-chapitres p {
+    margin-top: 10px;
+    color: var(--texte-doux);
+    font-size: 1.05rem;
+  }
+ 
+  .barre-outils {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .9rem;
+    color: var(--texte-doux);
+  }
+  .lien {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--texte);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+ 
+  .liste-chapitres {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+ 
+  .chapitre {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .chapitre:hover { border-color: #8a8a8a; }
+ 
+  .chapitre input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+ 
+  .case {
+    flex: none;
+    width: 26px; height: 26px;
+    border: 2px solid var(--bordure);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .case svg {
+    width: 16px; height: 16px;
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+ 
+  .chapitre:has(input:checked) {
+    border-color: var(--bordure-forte);
+    box-shadow: 0 0 0 1px var(--bordure-forte);
+  }
+  .chapitre input:checked + .case {
+    background: var(--texte);
+    border-color: var(--texte);
+  }
+  .chapitre input:checked + .case svg { opacity: 1; }
+  .chapitre:has(input:focus-visible) { outline: 2px solid var(--texte); outline-offset: 3px; }
+ 
+  .chapitre .texte small {
+    display: block;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+  }
+  .chapitre .texte strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -.01em;
+  }
+ 
+  .actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .bouton {
+    background: var(--texte);
+    color: #fff;
+    border: 1px solid var(--texte);
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, opacity .2s ease;
+  }
+  .bouton:hover:not(:disabled) { background: #333; }
+  .bouton:disabled {
+    background: var(--bordure);
+    border-color: var(--bordure);
+    color: #8a8a8a;
+    cursor: not-allowed;
+  }
+  .bouton.clair {
+    background: var(--carte);
+    color: var(--texte);
+    border-color: var(--bordure);
+  }
+  .bouton.clair:hover:not(:disabled) { border-color: var(--texte); background: var(--carte); }
+ 
+  /* ---------- Vue quiz ---------- */
+  .bloc-quiz {
+    width: 100%;
+    max-width: 720px;
+    margin-top: clamp(32px, 7vh, 70px);
+    padding-bottom: 60px;
+  }
+ 
+  .haut-quiz {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+ 
+  .progression { margin-top: 18px; }
+  .progression .texte-prog {
+    display: flex;
+    justify-content: space-between;
+    font-size: .85rem;
+    font-weight: 500;
+    color: var(--texte-doux);
+  }
+  .piste {
+    margin-top: 8px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--bordure);
+    overflow: hidden;
+  }
+  .piste div {
+    height: 100%;
+    width: 0;
+    background: var(--texte);
+    border-radius: 999px;
+    transition: width .35s ease;
+  }
+ 
+  .question {
+    margin-top: 24px;
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 14px;
+    padding: 32px 32px 28px;
+  }
+  .question .etiquette {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+  }
+  .question .enonce {
+    margin-top: 12px;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+  }
+  .question .enonce small {
+    display: block;
+    margin-top: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--texte-doux);
+  }
+  .question .enonce.definition {
+    font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+    font-weight: 500;
+    letter-spacing: -.01em;
+    line-height: 1.5;
+  }
+ 
+  .zone-reponse { margin-top: 26px; }
+ 
+  /* Niveau 1 : propositions */
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 16px 18px;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .option:hover:not(:disabled) { border-color: var(--texte); }
+  .option .lettre {
+    flex: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--bordure);
+    display: grid;
+    place-items: center;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--texte-doux);
+    margin-top: 1px;
+  }
+  .option:disabled { cursor: default; }
+  .option.juste { border-color: var(--ok); background: var(--ok-fond); }
+  .option.juste .lettre { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .option.faux { border-color: var(--ko); background: var(--ko-fond); }
+  .option.faux .lettre { background: var(--ko); border-color: var(--ko); color: #fff; }
+  .option.neutre { opacity: .55; }
+ 
+  /* Niveaux 2 et 3 : saisie */
+  .saisie {
+    width: 100%;
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 12px;
+    padding: 15px 18px;
+    font-size: 1.05rem;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  .saisie:focus { border-color: var(--texte); }
+  textarea.saisie { min-height: 130px; resize: vertical; line-height: 1.5; }
+  .saisie:disabled { background: #F6F6F6; }
+ 
+  .ligne-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .ligne-actions .bouton { padding: 12px 22px; font-size: .95rem; }
+ 
+  /* Retour de correction */
+  .correction {
+    margin-top: 22px;
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--bordure);
+    background: #F7F7F7;
+    line-height: 1.5;
+  }
+  .correction.juste { background: var(--ok-fond); border-color: var(--ok); }
+  .correction.faux  { background: var(--ko-fond); border-color: var(--ko); }
+  .correction .statut {
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .correction.juste .statut { color: var(--ok); }
+  .correction.faux .statut  { color: var(--ko); }
+  .correction .bloc-def { margin-top: 10px; }
+  .correction .bloc-def span {
+    display: block;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+    margin-bottom: 3px;
+  }
+  .correction .ta-reponse { white-space: pre-wrap; }
+ 
+  /* Résultat */
+  .resultat {
+    margin-top: 24px;
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 14px;
+    padding: 40px 32px 32px;
+    text-align: center;
+  }
+  .resultat .score {
+    font-size: clamp(3rem, 9vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -.04em;
+    line-height: 1;
+  }
+  .resultat .score small {
+    font-size: .4em;
+    font-weight: 500;
+    color: var(--texte-doux);
+    letter-spacing: 0;
+  }
+  .resultat .message {
+    margin-top: 14px;
+    font-size: 1.15rem;
+    color: var(--texte-doux);
+  }
+  .resultat .actions { justify-content: center; flex-wrap: wrap; }
+ 
+  .a-revoir { margin-top: 28px; text-align: left; }
+  .a-revoir h3 {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texte-doux);
+    margin-bottom: 12px;
+  }
+  .a-revoir ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .a-revoir li {
+    border: 1px solid var(--bordure);
+    border-radius: 10px;
+    padding: 14px 16px;
+    line-height: 1.5;
+  }
+  .a-revoir li strong { display: block; font-weight: 600; }
+  .a-revoir li span { color: var(--texte-doux); font-size: .95rem; }
+ 
+  /* ---------- Pied de page ---------- */
+  footer {
+    padding: 0 0 32px;
+    font-size: .9rem;
+    color: var(--texte-doux);
+  }
+ 
+  @media (max-width: 820px) {
+    .niveaux {
+      grid-template-columns: 1fr;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .carte { min-height: 240px; }
+    .chapitre { padding: 18px; gap: 16px; }
+    .chapitre .texte strong { font-size: 1.05rem; }
+    .actions { justify-content: stretch; }
+    .actions .bouton { width: 100%; }
+    .question { padding: 24px 20px 22px; }
+    .ligne-actions .bouton { flex: 1; }
+    .resultat { padding: 32px 20px 24px; }
+  }
+</style>
+</head>
+<body>
+ 
+  <!-- ===================== VUE 1 : choix du niveau ===================== -->
+  <div class="vue" id="vue-niveaux">
+    <header>
+      <div class="surtitre">Histoire</div>
+      <h1>Apprends tes définitions</h1>
+      <p class="sous-titre">Choisis ton niveau</p>
+    </header>
+ 
+    <main>
+      <section class="niveaux">
+ 
+        <button type="button" class="carte" data-niveau="1" data-consigne="Choisir entre différentes propositions" data-difficulte="Facile">
+          <div class="numero">01</div>
+          <h2>Niveau 1</h2>
+          <p class="consigne">(Choisir entre différentes propositions)</p>
+          <div class="difficulte">
+            <span>Facile</span>
+            <span class="points"><i class="plein"></i><i></i><i></i></span>
+          </div>
+        </button>
+ 
+        <button type="button" class="carte" data-niveau="2" data-consigne="Trouver le nom de la définition" data-difficulte="Moyen">
+          <div class="numero">02</div>
+          <h2>Niveau 2</h2>
+          <p class="consigne">(Trouver le nom de la définition)</p>
+          <div class="difficulte">
+            <span>Moyen</span>
+            <span class="points"><i class="plein"></i><i class="plein"></i><i></i></span>
+          </div>
+        </button>
+ 
+        <button type="button" class="carte" data-niveau="3" data-consigne="Cite la def" data-difficulte="Difficile">
+          <div class="numero">03</div>
+          <h2>Niveau 3</h2>
+          <p class="consigne">(Cite la def)</p>
+          <div class="difficulte">
+            <span>Difficile</span>
+            <span class="points"><i class="plein"></i><i class="plein"></i><i class="plein"></i></span>
+          </div>
+        </button>
+ 
+      </section>
+    </main>
+ 
+    <footer>Un peu chaque jour.</footer>
+  </div>
+ 
+  <!-- ===================== VUE 2 : choix des chapitres ===================== -->
+  <div class="vue" id="vue-chapitres" hidden>
+    <div class="bloc-chapitres">
+ 
+      <button type="button" class="retour" id="retour">← Changer de niveau</button>
+ 
+      <div class="entete-chapitres">
+        <span class="badge" id="badge-niveau">Niveau 1</span>
+        <h2>Quels chapitres veux-tu réviser ?</h2>
+        <p id="consigne-niveau">Choisir entre différentes propositions</p>
+      </div>
+ 
+      <div class="barre-outils">
+        <span id="compteur">0 chapitre sélectionné</span>
+        <button type="button" class="lien" id="tout">Tout sélectionner</button>
+      </div>
+ 
+      <div class="liste-chapitres">
+ 
+        <label class="chapitre">
+          <input type="checkbox" name="chapitre" value="1">
+          <span class="case"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span class="texte">
+            <small>Chapitre 1</small>
+            <strong>L'Europe, un théâtre majeur des guerres totales</strong>
+          </span>
+        </label>
+ 
+        <label class="chapitre">
+          <input type="checkbox" name="chapitre" value="2">
+          <span class="case"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span class="texte">
+            <small>Chapitre 2</small>
+            <strong>Démocraties fragilisées et expériences totalitaires dans l'Europe de l'entre-deux-guerres</strong>
+          </span>
+        </label>
+ 
+      </div>
+ 
+      <div class="actions">
+        <button type="button" class="bouton" id="commencer" disabled>Commencer</button>
+      </div>
+ 
+    </div>
+  </div>
+ 
+  <!-- ===================== VUE 3 : quiz ===================== -->
+  <div class="vue" id="vue-quiz" hidden>
+    <div class="bloc-quiz">
+ 
+      <div class="haut-quiz">
+        <button type="button" class="retour" id="quitter">← Quitter</button>
+        <span class="badge" id="badge-quiz">Niveau 1</span>
+      </div>
+ 
+      <div id="zone-quiz"></div>
+ 
+    </div>
+  </div>
+ 
+<script>
+/* =====================================================================
+   DONNÉES : définitions, fausses propositions (niveau 1) et réponses
+   acceptées (niveau 2)
+   ===================================================================== */
+const DEFS = [
+  /* ---------- Chapitre 1 ---------- */
+  {
+    chap: 1, terme: "Guerre de mouvements",
+    def: "Priorité militaire donnée aux offensifs",
+    faux: [
+      "Stratégie militaire où les soldats creusent des tranchées pour défendre leur position",
+      "Guerre menée uniquement par la marine et l'aviation sur de longues distances",
+      "Déplacement massif de populations civiles fuyant les zones de combat"
+    ],
+    accepte: ["guerre de mouvements", "guerre de mouvement"]
+  },
+  {
+    chap: 1, terme: "Guerre de position",
+    def: "Les soldats défendent leur position dans les tranchées",
+    faux: [
+      "Priorité militaire donnée aux offensives rapides et aux déplacements de troupes",
+      "Guerre dans laquelle les armées changent constamment de territoire occupé",
+      "Stratégie consistant à encercler une ville pour l'affamer et la faire céder"
+    ],
+    accepte: ["guerre de position", "guerre de positions"]
+  },
+  {
+    chap: 1, terme: "Armistice",
+    def: "Arrêt des combats qui ne met pas fin à l'état de guerre",
+    faux: [
+      "Accord de paix définitif qui met fin à l'état de guerre entre les belligérants",
+      "Traité imposé au vaincu qui l'oblige à verser des réparations financières",
+      "Suspension des combats décidée unilatéralement par un seul camp"
+    ],
+    accepte: ["armistice"]
+  },
+  {
+    chap: 1, terme: "Guerre totale",
+    def: "Guerre mobilisant, pour la victoire, toutes les forces militaires, économiques et civiles",
+    faux: [
+      "Guerre limitée à l'armée de métier, sans implication de la population civile",
+      "Guerre qui oppose tous les pays d'un même continent",
+      "Guerre qui se déroule simultanément sur terre, sur mer et dans les airs"
+    ],
+    accepte: ["guerre totale"]
+  },
+  {
+    chap: 1, terme: "Propagande",
+    def: "Ensemble de méthodes de communication utilisées pour faire accepter une origine, une idée à l'ensemble de la population",
+    faux: [
+      "Ensemble des lois qui limitent la liberté de la presse en temps de guerre",
+      "Techniques de surveillance utilisées pour repérer les ennemis de l'intérieur",
+      "Méthodes d'information neutres et objectives destinées à renseigner la population"
+    ],
+    accepte: ["propagande", "propagandes"]
+  },
+  {
+    chap: 1, terme: "Génocide",
+    def: "Extermination systématique et volontaire de tout un peuple",
+    faux: [
+      "Massacre de soldats ennemis lors d'une bataille de grande ampleur",
+      "Déplacement forcé d'un peuple hors de son territoire d'origine",
+      "Persécution d'une minorité par des lois discriminatoires"
+    ],
+    accepte: ["genocide"]
+  },
+ 
+  /* ---------- Chapitre 2 ---------- */
+  {
+    chap: 2, terme: "URSS", sous: "Union des républiques socialistes soviétiques",
+    def: "État fédéral composé de plusieurs républiques qui gardent une certaine autonomie, créé en 1922",
+    faux: [
+      "État unitaire dirigé depuis Moscou, sans aucune autonomie pour les républiques, créé en 1917",
+      "Régime politique dirigé par un seul homme, imposé en Russie après la chute du tsar",
+      "Alliance militaire entre la Russie et ses voisins, créée après la Seconde Guerre mondiale"
+    ],
+    accepte: ["urss", "union des republiques socialistes sovietiques", "union sovietique"]
+  },
+  {
+    chap: 2, terme: "Goulag",
+    def: "Camps de concentration et de travaux forcés où sont enfermés les personnes considérées comme ennemis du régime soviétique",
+    faux: [
+      "Prison de haute sécurité réservée aux condamnés à mort du régime soviétique",
+      "Ferme collective où travaillent les paysans soviétiques",
+      "Police politique chargée de surveiller et d'arrêter les opposants au régime"
+    ],
+    accepte: ["goulag", "goulags"]
+  },
+  {
+    chap: 2, terme: "Kolkhoze",
+    def: "Exploitation agricole collective, cultivée par des paysans avec des outils en commun",
+    faux: [
+      "Grande exploitation agricole appartenant à l'État, où les paysans sont salariés",
+      "Camp de travail forcé destiné aux paysans qui refusent de travailler",
+      "Petite propriété agricole privée accordée aux paysans par le régime"
+    ],
+    accepte: ["kolkhoze", "kolkhozes", "kolkhoz", "kolkhose", "kolkhoses"]
+  },
+  {
+    chap: 2, terme: "Collectivisation",
+    def: "En URSS, politique visant à la disparition de la propriété privée. Les paysans sont regroupés dans des propriétés collectives ou des fermes d'État",
+    faux: [
+      "En URSS, politique de redistribution des terres des grands propriétaires aux paysans pauvres",
+      "En URSS, politique d'industrialisation rapide fondée sur des plans quinquennaux",
+      "En URSS, réquisition de la production agricole par l'armée pour nourrir les villes"
+    ],
+    accepte: ["collectivisation"]
+  },
+  {
+    chap: 2, terme: "Communisme",
+    def: "Idéologie qui veut instaurer, par une révolution immédiate, une société égalitaire, sans différences de richesse et sans propriété privée",
+    faux: [
+      "Idéologie qui défend la propriété privée et la libre concurrence entre les entreprises",
+      "Idéologie qui veut réformer progressivement la société par le vote, tout en gardant la propriété privée",
+      "Idéologie qui veut instaurer un pouvoir fort dirigé par un chef et fondé sur l'unité de la nation"
+    ],
+    accepte: ["communisme"]
+  },
+  {
+    chap: 2, terme: "Koulak",
+    def: "En URSS, paysans propriétaires puis toute personne refusant la collectivisation des terres. Ils sont considérés comme les ennemis du peuple.",
+    faux: [
+      "En URSS, ouvrier d'usine récompensé pour sa productivité exceptionnelle",
+      "En URSS, responsable local chargé de diriger un kolkhoze au nom du Parti",
+      "En URSS, soldat de l'Armée rouge chargé de réprimer les révoltes paysannes"
+    ],
+    accepte: ["koulak", "koulaks", "kulak", "kulaks"]
+  }
+];
+ 
+const NIVEAUX = {
+  1: { nom: "Facile",    etiquette: "Choisis la bonne définition" },
+  2: { nom: "Moyen",     etiquette: "Trouve le terme correspondant à cette définition" },
+  3: { nom: "Difficile", etiquette: "Cite la définition de" }
+};
+ 
+/* =====================================================================
+   OUTILS
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+ 
+function melanger(tab) {
+  const a = [...tab];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+ 
+function normaliser(s) {
+  return s.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+ 
+function distance(a, b) {
+  const m = a.length, n = b.length;
+  const d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i][j - 1] + 1,
+        d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+    }
+  }
+  return d[m][n];
+}
+ 
+/* Réponse acceptée, avec une petite tolérance pour les fautes de frappe */
+function reponseJuste(saisie, question) {
+  const s = normaliser(saisie);
+  if (!s) return false;
+  return question.accepte.some(att => {
+    const tolerance = att.length >= 10 ? 2 : att.length >= 5 ? 1 : 0;
+    return distance(s, att) <= tolerance;
+  });
+}
+ 
+function el(tag, classe, texte) {
+  const e = document.createElement(tag);
+  if (classe) e.className = classe;
+  if (texte !== undefined) e.textContent = texte;
+  return e;
+}
+ 
+function nomTerme(q) {
+  return q.sous ? q.terme + " (" + q.sous + ")" : q.terme;
+}
+ 
+/* =====================================================================
+   NAVIGATION ENTRE LES VUES
+   ===================================================================== */
+const vues = {
+  niveaux:   $('vue-niveaux'),
+  chapitres: $('vue-chapitres'),
+  quiz:      $('vue-quiz')
+};
+ 
+function montrer(nom) {
+  Object.entries(vues).forEach(([n, v]) => v.hidden = n !== nom);
+  window.scrollTo(0, 0);
+}
+ 
+function niveauCourant() {
+  const m = location.hash.match(/^#niveau-([123])$/);
+  return m ? Number(m[1]) : null;
+}
+ 
+function afficher() {
+  const niv = niveauCourant();
+  if (niv) {
+    const carte = document.querySelector('[data-niveau="' + niv + '"]');
+    $('badge-niveau').textContent = 'Niveau ' + niv + ' · ' + carte.dataset.difficulte;
+    $('consigne-niveau').textContent = carte.dataset.consigne;
+    montrer('chapitres');
+  } else {
+    montrer('niveaux');
+  }
+}
+ 
+/* =====================================================================
+   CHOIX DES CHAPITRES
+   ===================================================================== */
+const cases = [...document.querySelectorAll('input[name="chapitre"]')];
+ 
+function majSelection() {
+  const n = cases.filter(c => c.checked).length;
+  $('compteur').textContent = n + (n > 1 ? ' chapitres sélectionnés' : ' chapitre sélectionné');
+  $('commencer').disabled = n === 0;
+  $('tout').textContent = n === cases.length ? 'Tout désélectionner' : 'Tout sélectionner';
+}
+ 
+document.querySelectorAll('[data-niveau]').forEach(carte => {
+  carte.addEventListener('click', () => {
+    cases.forEach(c => c.checked = false);
+    majSelection();
+    location.hash = 'niveau-' + carte.dataset.niveau;
+  });
+});
+ 
+$('retour').addEventListener('click', () => {
+  history.length > 1 ? history.back() : (location.hash = '');
+});
+ 
+$('tout').addEventListener('click', () => {
+  const toutCoche = cases.every(c => c.checked);
+  cases.forEach(c => c.checked = !toutCoche);
+  majSelection();
+});
+ 
+cases.forEach(c => c.addEventListener('change', majSelection));
+window.addEventListener('hashchange', afficher);
+ 
+/* =====================================================================
+   QUIZ
+   ===================================================================== */
+let quiz = null;
+ 
+function lancerQuiz() {
+  const niveau = niveauCourant();
+  if (!niveau) return;
+  const chapitres = cases.filter(c => c.checked).map(c => Number(c.value));
+  quiz = {
+    niveau,
+    chapitres,
+    questions: melanger(DEFS.filter(d => chapitres.includes(d.chap))),
+    i: 0,
+    score: 0,
+    rates: []
+  };
+  $('badge-quiz').textContent = 'Niveau ' + niveau + ' · ' + NIVEAUX[niveau].nom;
+  montrer('quiz');
+  afficherQuestion();
+}
+ 
+$('commencer').addEventListener('click', lancerQuiz);
+$('quitter').addEventListener('click', () => montrer('chapitres'));
+ 
+function enteteQuestion(zone) {
+  const total = quiz.questions.length;
+  const prog = el('div', 'progression');
+  const ligne = el('div', 'texte-prog');
+  ligne.append(el('span', '', 'Question ' + (quiz.i + 1) + ' sur ' + total));
+  ligne.append(el('span', '', 'Score : ' + quiz.score));
+  const piste = el('div', 'piste');
+  const barre = el('div');
+  piste.append(barre);
+  prog.append(ligne, piste);
+  zone.append(prog);
+  requestAnimationFrame(() => { barre.style.width = (quiz.i / total * 100) + '%'; });
+}
+ 
+function afficherQuestion() {
+  const zone = $('zone-quiz');
+  zone.innerHTML = '';
+  if (quiz.i >= quiz.questions.length) return afficherResultat();
+ 
+  const q = quiz.questions[quiz.i];
+  enteteQuestion(zone);
+ 
+  const carte = el('section', 'question');
+  const etiquette = el('div', 'etiquette', 'Chapitre ' + q.chap + ' · ' + NIVEAUX[quiz.niveau].etiquette);
+  const enonce = el('div', 'enonce');
+  const reponse = el('div', 'zone-reponse');
+  const retour = el('div');
+ 
+  if (quiz.niveau === 2) {
+    enonce.classList.add('definition');
+    enonce.textContent = q.def;
+    etiquette.textContent = 'Chapitre ' + q.chap + ' · ' + NIVEAUX[2].etiquette;
+  } else {
+    enonce.textContent = q.terme;
+    if (q.sous) enonce.append(el('small', '', q.sous));
+  }
+ 
+  carte.append(etiquette, enonce, reponse, retour);
+  zone.append(carte);
+ 
+  if (quiz.niveau === 1) niveau1(q, reponse, retour);
+  if (quiz.niveau === 2) niveau2(q, reponse, retour);
+  if (quiz.niveau === 3) niveau3(q, reponse, retour);
+}
+ 
+function boutonSuivant() {
+  const dernier = quiz.i === quiz.questions.length - 1;
+  const b = el('button', 'bouton', dernier ? 'Voir mon résultat' : 'Question suivante →');
+  b.type = 'button';
+  b.addEventListener('click', () => { quiz.i++; afficherQuestion(); });
+  return b;
+}
+ 
+function noterResultat(q, ok) {
+  if (ok) quiz.score++; else quiz.rates.push(q);
+}
+ 
+/* ---------- Niveau 1 : choisir entre des propositions ---------- */
+function niveau1(q, reponse, retour) {
+  const options = el('div', 'options');
+  const propositions = melanger([q.def, ...q.faux]);
+  const boutons = [];
+ 
+  propositions.forEach((texte, k) => {
+    const b = el('button', 'option');
+    b.type = 'button';
+    b.append(el('span', 'lettre', 'ABCD'[k]), el('span', '', texte));
+    b.addEventListener('click', () => {
+      const ok = texte === q.def;
+      boutons.forEach((bt, idx) => {
+        bt.disabled = true;
+        if (propositions[idx] === q.def) bt.classList.add('juste');
+        else if (bt === b) bt.classList.add('faux');
+        else bt.classList.add('neutre');
+      });
+      noterResultat(q, ok);
+ 
+      const corr = el('div', 'correction ' + (ok ? 'juste' : 'faux'));
+      corr.append(el('div', 'statut', ok ? 'Bonne réponse !' : 'Pas tout à fait.'));
+      retour.append(corr);
+      const act = el('div', 'ligne-actions');
+      act.append(boutonSuivant());
+      retour.append(act);
+      act.querySelector('button').focus();
+    });
+    boutons.push(b);
+    options.append(b);
+  });
+  reponse.append(options);
+}
+ 
+/* ---------- Niveau 2 : trouver le nom ---------- */
+function niveau2(q, reponse, retour) {
+  const champ = el('input', 'saisie');
+  champ.type = 'text';
+  champ.placeholder = 'Écris le terme…';
+  champ.autocomplete = 'off';
+  champ.spellcheck = false;
+  reponse.append(champ);
+ 
+  const act = el('div', 'ligne-actions');
+  const passer = el('button', 'bouton clair', 'Je ne sais pas');
+  const valider = el('button', 'bouton', 'Valider');
+  passer.type = valider.type = 'button';
+  act.append(passer, valider);
+  reponse.append(act);
+ 
+  let fini = false;
+  function corriger(abandon) {
+    if (fini) return;
+    const saisie = champ.value.trim();
+    if (!abandon && !saisie) { champ.focus(); return; }
+    fini = true;
+    const ok = !abandon && reponseJuste(saisie, q);
+    noterResultat(q, ok);
+    champ.disabled = true;
+    act.remove();
+ 
+    const corr = el('div', 'correction ' + (ok ? 'juste' : 'faux'));
+    corr.append(el('div', 'statut', ok ? 'Bonne réponse !' : (abandon ? 'La réponse était :' : 'Pas tout à fait. La réponse était :')));
+    if (!ok || q.sous) {
+      const t = el('div', 'bloc-def');
+      t.append(el('span', '', 'Terme'), document.createTextNode(nomTerme(q)));
+      corr.append(t);
+    }
+    retour.append(corr);
+    const a2 = el('div', 'ligne-actions');
+    a2.append(boutonSuivant());
+    retour.append(a2);
+    a2.querySelector('button').focus();
+  }
+ 
+  valider.addEventListener('click', () => corriger(false));
+  passer.addEventListener('click', () => corriger(true));
+  champ.addEventListener('keydown', e => { if (e.key === 'Enter') corriger(false); });
+  champ.focus();
+}
+ 
+/* ---------- Niveau 3 : citer la définition ---------- */
+function niveau3(q, reponse, retour) {
+  const champ = el('textarea', 'saisie');
+  champ.placeholder = 'Écris la définition en entier…';
+  champ.spellcheck = false;
+  reponse.append(champ);
+ 
+  const act = el('div', 'ligne-actions');
+  const valider = el('button', 'bouton', 'Voir la définition');
+  valider.type = 'button';
+  act.append(valider);
+  reponse.append(act);
+ 
+  valider.addEventListener('click', () => {
+    champ.disabled = true;
+    act.remove();
+ 
+    const corr = el('div', 'correction');
+    const maRep = el('div', 'bloc-def');
+    maRep.append(el('span', '', 'Ta réponse'));
+    maRep.append(el('div', 'ta-reponse', champ.value.trim() || '(vide)'));
+    const attendu = el('div', 'bloc-def');
+    attendu.append(el('span', '', 'Définition attendue'));
+    attendu.append(el('div', '', q.def));
+    corr.append(maRep, attendu);
+    retour.append(corr);
+ 
+    const question = el('div', 'etiquette', 'Compare, puis juge-toi honnêtement');
+    question.style.marginTop = '20px';
+    retour.append(question);
+ 
+    const dernier = quiz.i === quiz.questions.length - 1;
+    const a2 = el('div', 'ligne-actions');
+    a2.style.justifyContent = 'flex-start';
+    const non = el('button', 'bouton clair', 'À revoir');
+    const oui = el('button', 'bouton', 'Je la connaissais');
+    non.type = oui.type = 'button';
+    non.addEventListener('click', () => { noterResultat(q, false); quiz.i++; afficherQuestion(); });
+    oui.addEventListener('click', () => { noterResultat(q, true);  quiz.i++; afficherQuestion(); });
+    a2.append(non, oui);
+    retour.append(a2);
+    if (dernier) question.textContent = 'Dernière question : compare, puis juge-toi honnêtement';
+  });
+  champ.focus();
+}
+ 
+/* ---------- Résultat ---------- */
+function afficherResultat() {
+  const zone = $('zone-quiz');
+  zone.innerHTML = '';
+  const total = quiz.questions.length;
+  const pct = Math.round(quiz.score / total * 100);
+ 
+  const bloc = el('section', 'resultat');
+  const score = el('div', 'score');
+  score.append(document.createTextNode(quiz.score));
+  score.append(el('small', '', ' / ' + total));
+  bloc.append(score);
+ 
+  let msg;
+  if (pct === 100) msg = "Sans faute, bravo !";
+  else if (pct >= 75) msg = "Très bien, plus que quelques détails à revoir.";
+  else if (pct >= 50) msg = "C'est un bon début, continue comme ça.";
+  else msg = "Pas de panique, relis les définitions et réessaie.";
+  bloc.append(el('p', 'message', msg));
+ 
+  if (quiz.rates.length) {
+    const rev = el('div', 'a-revoir');
+    rev.append(el('h3', '', 'À revoir'));
+    const ul = el('ul');
+    quiz.rates.forEach(q => {
+      const li = el('li');
+      li.append(el('strong', '', nomTerme(q)), el('span', '', q.def));
+      ul.append(li);
+    });
+    rev.append(ul);
+    bloc.append(rev);
+  }
+ 
+  const act = el('div', 'actions');
+  const rejouer = el('button', 'bouton', 'Recommencer');
+  const chap = el('button', 'bouton clair', 'Changer de chapitres');
+  const accueil = el('button', 'bouton clair', 'Changer de niveau');
+  [rejouer, chap, accueil].forEach(b => b.type = 'button');
+  rejouer.addEventListener('click', lancerQuiz);
+  chap.addEventListener('click', () => montrer('chapitres'));
+  accueil.addEventListener('click', () => { location.hash = ''; });
+  act.append(rejouer, chap, accueil);
+  bloc.append(act);
+ 
+  zone.append(bloc);
+}
+ 
+majSelection();
+afficher();
+</script>
+ 
+</body>
+</html>
